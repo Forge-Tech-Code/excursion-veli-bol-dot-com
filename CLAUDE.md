@@ -42,7 +42,7 @@ There is no `404.html` here, so the general 404 check is skipped (`notFoundPage:
 
 - **React 19** — UI
 - **Vite 8** — build tool, `base: '/'` in `vite.config.js`
-- **Tailwind CSS 3** — styling via utility classes + component layer in `src/index.css`
+- **Tailwind CSS 3** — styling via utility classes + component layer in `src/index.css`. Held on 3.4 on purpose: v4 drops Safari before 16.4, and a trial upgrade (2026-10-18) changed line heights and wrapping, so it is a design task, not a version bump. `npm audit` flags Tailwind 3's build-time file-watching dependencies (braces/micromatch, postcss-selector-parser); they only ever see this repo's own files and never ship to the browser, and the only fix is v4.
 - **vite-react-ssg** (routes entry) — prerenders one static page per language
 - **react-router-dom 6** — held on 6 because `vite-react-ssg` (0.9.2, the latest) only accepts `^6.14`; only as the build-time list of those pages (`src/routes.jsx`); nothing navigates through it. Every in-page link is an anchor (`#essentials`, `#about`, etc.)
 
