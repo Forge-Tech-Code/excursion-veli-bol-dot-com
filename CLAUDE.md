@@ -2,7 +2,7 @@
 
 ## What this project is
 
-Static marketing website for Veli Bol Excursions, a boat tour company in Bol, Croatia. Single-page scroll. No backend, no router, no database. Builds to `dist/` and deploys to GitHub Pages via GitHub Actions.
+Static marketing website for Veli Bol Excursions, a boat tour company in Bol, Croatia. Single-page scroll, built once per language (see "Languages"). No backend, no database. Builds to `dist/` and deploys to GitHub Pages via GitHub Actions.
 
 ## Commands
 
@@ -17,7 +17,8 @@ npm run preview  # serve dist/ locally
 - **React 18** — UI
 - **Vite 5** — build tool, `base: '/'` in `vite.config.js`
 - **Tailwind CSS 3** — styling via utility classes + component layer in `src/index.css`
-- **No router** — single HTML page, anchor links (`#essentials`, `#about`, etc.)
+- **vite-react-ssg** (routes entry) — prerenders one static page per language
+- **react-router-dom** — only as the build-time list of those pages (`src/routes.jsx`); nothing navigates through it. Every in-page link is an anchor (`#essentials`, `#about`, etc.)
 
 ## Project layout
 
@@ -30,15 +31,25 @@ src/
     Hero.jsx
     Essentials.jsx   tour info, pricing, map (dark)
     About.jsx        (light)
-    PrivateTour.jsx  private sunset charter, €120/hr, `tiers` array (#private) (dark)
+    PrivateTour.jsx  private sunset charter, `tierPrices` (#private) (dark)
     Experience.jsx   "reasons to come aboard" grid (dark)
     FoodOnBoard.jsx  menu add-ons (light)
     Gallery.jsx      2-col photo grid (dark)
     Reviews.jsx      testimonials, `reviews` array (light)
-    FAQ.jsx          accordion, `faqs` array (uses useState per item) (dark)
+    FAQ.jsx          accordion over `faq.items` (uses useState per item) (dark)
     BookingCTA.jsx   closing call-to-action (#book) (light)
-  App.jsx            imports and orders all sections
-  main.jsx           ReactDOM.createRoot
+  i18n/
+    locales.js       the languages, their URLs, and which are LIVE
+    en.js hr.js de.js  every user-visible string, one dictionary per language
+    index.jsx        <LangProvider>, useLang(), and the same-shape check
+  seo/
+    Seo.jsx          the per-language <head>: title, description, canonical,
+                     robots, hreflang, Open Graph, Twitter
+    schema.js        the JSON-LD graph, built per language
+    business.js      language-independent facts: phone, address, prices, rating
+  App.jsx            orders all sections; takes `lang` from the route
+  routes.jsx         one route per language
+  main.jsx           ViteReactSSG entry
   index.css          @tailwind directives + .label, .section-heading, .btn-dark, .info-card
 public/
   images/            boat.jpg, billboard.jpg — served as static assets
@@ -47,6 +58,45 @@ public/
   workflows/
     deploy.yml       push to main → npm ci → npm run build → GitHub Pages
 ```
+
+## Languages
+
+| URL | file | dictionary | status |
+|---|---|---|---|
+| `/` | `dist/index.html` | `src/i18n/en.js` | live |
+| `/hr/` | `dist/hr/index.html` | `src/i18n/hr.js` | **draft** |
+| `/de/` | `dist/de/index.html` | `src/i18n/de.js` | **draft** |
+
+**No user-visible text belongs in a component.** It goes in all three dictionaries under the same key and
+is read with `const { t } = useLang()`. `src/i18n/index.jsx` checks at build time that `hr.js` and `de.js`
+have exactly the keys of `en.js`, so a missing string fails `npm run build` and names the key instead of
+shipping an empty heading. Lists that pair text with a price, an icon or a photo are keyed by **id, not
+index** (`private.tiers.h1` ↔ `tierPrices.h1` in `PrivateTour.jsx`, `food.menu.grill` ↔ `prices.grill`,
+photo alt text by file name), so a reorder cannot mis-pair them.
+
+What is **not** translated: the business name, the guest review quotes and the Morten Smalby quote (they
+are other people's words, and the Product review markup must match what is on the page), names, contact
+details and prices.
+
+**The Croatian and German are drafts written here, not by the client.** Until each is reviewed — Milan
+for the Croatian, a native speaker for the German — its page is built but:
+
+- carries `noindex, follow`,
+- is left out of `sitemap.xml` and out of every hreflang set, and
+- is linked from nowhere: **there is no language switcher yet**, deliberately.
+
+The pages can be opened directly at `/hr/` and `/de/` to review them. **To launch a language:** have the
+copy checked, set it to `true` in `LIVE` in `src/i18n/locales.js`, and add a language switcher (a plain
+`<a>` to the other page — changing language is a change of document). The robots tag, the reciprocal
+hreflang set, `og:locale:alternate` and the sitemap entries all follow from `LIVE` with no other edits.
+After launch, submit the sitemap again in Search Console.
+
+German compounds can be wider than a 320px phone: `Sonnen\u00ADuntergangs\u00ADtour` carries soft
+hyphens so it breaks only when it has to. Check new long German words at 320px the same way.
+
+The structured data's `@id`s: the website and the business hang off the root URL in every language (one
+entity); everything describing a page — the WebPage, FAQ, Product, trip, charter — hangs off that page's
+own URL. On the English page both are the root, so its ids are unchanged.
 
 ## Design tokens (tailwind.config.js)
 
@@ -61,6 +111,12 @@ public/
 | `soft` | `#DDD6CC` | borders, dividers |
 
 Fonts: **Playfair Display** (serif — headings, logo, italic) · **Inter** (sans — body, labels, UI)
+
+Both are **self-hosted** from `public/fonts/` — variable woff2, latin + latin-ext only — with
+`@font-face` at the top of `src/index.css` and the two upright latin files preloaded in `index.html`.
+No request goes to Google Fonts. latin-ext carries the Croatian č ć š ž đ; German needs only latin. To
+refresh, take the same files from `@fontsource-variable/inter` / `playfair-display` and keep the
+`unicode-range` lines as they are.
 
 ## Reusable CSS classes (src/index.css)
 
@@ -81,15 +137,18 @@ Note: the Navbar links to `#essentials`, `#about`, `#private`, `#experience`, `#
 
 ## Content that changes seasonally
 
-- **Pricing** — `src/sections/Essentials.jsx` — the three-column price table
-- **Food menu** — `src/sections/FoodOnBoard.jsx` — the `menu` array
-- **Tour details** — `src/sections/Essentials.jsx` — the `infoCards` array (duration, schedule, destination, group size)
-- **Private tour rate** — `src/sections/PrivateTour.jsx` — the €120/hr headline and the `tiers` array (what each hour includes)
+Wording changes go in **all three** dictionaries; figures live in one place each.
+
+- **Ticket price** — `pricing.adult` in `src/seo/business.js` (the table in `Essentials.jsx` and the schema both read it); the price wording is `essentials.pricing` in the dictionaries
+- **Food menu** — prices in `prices` in `src/sections/FoodOnBoard.jsx`; names and descriptions in `food.menu`
+- **Tour details** — `essentials.cards` (duration, schedule, destination, group size) and `essentials.included`
+- **Private charter** — prices in `tierPrices` in `src/sections/PrivateTour.jsx`; durations and what each includes in `private.tiers`
+- **FAQ** — `faq.items` (also the FAQPage structured data)
 
 ## Adding photos
 
 1. Drop image into `public/images/` (JPG or WebP, keep under 400 KB)
-2. In `src/sections/Gallery.jsx`, edit the `photos` array — each entry is `{ src: '/images/filename.jpg', alt: '...' }`. A `GallerySlot` with a falsy `src` renders a `cream-dark` "Photo coming soon" placeholder, so `src: null` is still a valid way to leave a slot empty.
+2. In `src/sections/Gallery.jsx`, add the file name (without `.webp`) to the `photos` array, and its alt text under `gallery.photos` with the same name in **each** dictionary.
 3. Push to `main` — Actions builds and deploys automatically
 
 ## Deployment

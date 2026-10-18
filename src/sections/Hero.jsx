@@ -1,6 +1,9 @@
+import { useLang } from '../i18n'
+
 export default function Hero() {
+  const { t } = useLang()
   return (
-    <section id="home" aria-label="Veli Bol Excursions — boat tours from Bol, Brač" className="relative min-h-screen flex flex-col justify-end pb-20 overflow-hidden">
+    <section id="home" aria-label={t.hero.ariaLabel} className="relative min-h-screen flex flex-col justify-end pb-20 overflow-hidden">
       {/* Background */}
       <img
         src="/images/hero.webp"
@@ -8,7 +11,7 @@ export default function Hero() {
         sizes="100vw"
         width={2000}
         height={1059}
-        alt="Aerial view of the Veli Bol excursion boat anchored in a hidden Adriatic bay near Bol on Brač, Croatia"
+        alt={t.hero.imageAlt}
         className="absolute inset-0 w-full h-full object-cover"
         style={{ objectPosition: '30% 35%' }}
         fetchpriority="high"
@@ -19,7 +22,7 @@ export default function Hero() {
       {/* Content */}
       <div className="relative z-10 max-w-5xl mx-auto px-5 sm:px-8 w-full [text-shadow:0_2px_16px_rgba(12,27,43,0.55)]">
         <p className="font-sans text-[10px] tracking-[0.25em] uppercase text-white/70 mb-5">
-          Bol · Brač · Croatia
+          {t.hero.label}
         </p>
 
         {/* The visible wordmark is the h1, so the page's strongest heading also
@@ -28,20 +31,20 @@ export default function Hero() {
         <h1 className="font-serif font-bold text-white leading-[1.05] mb-6" style={{ fontSize: 'clamp(2.8rem, 8vw, 5.5rem)' }}>
           Veli Bol<br />
           <em>Excursions</em>
-          <span className="sr-only"> — half-day boat tours from Bol, Brač, Croatia</span>
+          <span className="sr-only">{t.hero.srSuffix}</span>
         </h1>
 
         <p className="font-serif italic text-white/90 text-lg sm:text-xl max-w-md leading-snug mb-4">
-          Half-day boat tours from Bol to the hidden bays of Hvar — swimming stops, a slow lunch, nothing rushed.
+          {t.hero.lede}
         </p>
 
         <p className="font-sans text-[10px] tracking-[0.25em] uppercase text-white/60 mb-8">
-          You decide where you want to swim
+          {t.hero.tagline}
         </p>
 
         <div className="flex flex-wrap items-center gap-4">
           <a href="tel:+385957420929" className="btn-outline-light text-sm tracking-widest uppercase">
-            Book your seat →
+            {t.hero.cta}
           </a>
           <div className="wa-btn">
             <span className="wa-btn-ring" />
@@ -63,7 +66,7 @@ export default function Hero() {
 
       {/* Scroll hint */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10">
-        <p className="font-sans text-[9px] tracking-[0.3em] uppercase text-white/40">Scroll</p>
+        <p className="font-sans text-[9px] tracking-[0.3em] uppercase text-white/40">{t.hero.scroll}</p>
       </div>
     </section>
   )
