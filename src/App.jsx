@@ -1,5 +1,7 @@
+import { LangProvider } from './i18n'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import Seo from './seo/Seo'
 import StructuredData from './seo/StructuredData'
 import Hero from './sections/Hero'
 import Essentials from './sections/Essentials'
@@ -13,9 +15,10 @@ import Reviews from './sections/Reviews'
 import FAQ from './sections/FAQ'
 import BookingCTA from './sections/BookingCTA'
 
-export default function App() {
+export default function App({ lang }) {
   return (
-    <>
+    <LangProvider lang={lang}>
+      <Seo />
       <Navbar />
       <main>
         <Hero />
@@ -32,6 +35,6 @@ export default function App() {
       </main>
       <Footer />
       <StructuredData />
-    </>
+    </LangProvider>
   )
 }

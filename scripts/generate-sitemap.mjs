@@ -2,8 +2,14 @@
 // image list is taken from the page that actually shipped rather than kept in
 // sync by hand. Image entries help the photos surface in Google Images, which
 // is a real source of traffic for a tour operator.
+//
+// Only LIVE languages are listed (src/i18n/locales.js). While Croatian and
+// German are drafts the sitemap is the English page alone; once a second
+// language goes live, every <url> carries the same reciprocal hreflang set the
+// pages put in their <head>.
 import { readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { LIVE_LANGS, localePath, localeTag } from '../src/i18n/locales.js'
 
 const SITE_URL = 'https://excursion-veli-bol.com'
 const DIST = path.resolve('dist')
@@ -35,18 +41,31 @@ const imageEntries = [...images]
   )
   .join('\n')
 
-const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-  <url>
-    <loc>${SITE_URL}/</loc>
-    <lastmod>${lastmod}</lastmod>
+const alternates =
+  LIVE_LANGS.length > 1
+    ? [
+        ...LIVE_LANGS.map((l) => `    <xhtml:link rel="alternate" hreflang="${localeTag[l]}" href="${SITE_URL}${localePath[l]}" />`),
+        `    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE_URL}/" />`,
+      ].join('\n') + '\n'
+    : ''
+
+// The photos are the same on every language page, so they are listed once,
+// under the English URL.
+const urls = LIVE_LANGS.map(
+  (lang) => `  <url>
+    <loc>${SITE_URL}${localePath[lang]}</loc>
+${alternates}    <lastmod>${lastmod}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
-${imageEntries}
-  </url>
+${lang === 'en' ? imageEntries + '\n' : ''}  </url>`,
+).join('\n')
+
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"${LIVE_LANGS.length > 1 ? '\n        xmlns:xhtml="http://www.w3.org/1999/xhtml"' : ''}>
+${urls}
 </urlset>
 `
 
 await writeFile(path.join(DIST, 'sitemap.xml'), sitemap)
-console.log(`sitemap.xml written — lastmod ${lastmod}, ${images.size} images`)
+console.log(`sitemap.xml written — ${LIVE_LANGS.join(', ')}, lastmod ${lastmod}, ${images.size} images`)

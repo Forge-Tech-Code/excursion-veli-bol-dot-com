@@ -1,4 +1,7 @@
+import { useLang } from '../i18n'
+
 export default function About() {
+  const { t } = useLang()
   return (
     <section id="about" className="bg-cream py-20 sm:py-28 border-t border-soft">
       <div className="max-w-5xl mx-auto px-5 sm:px-8">
@@ -8,29 +11,25 @@ export default function About() {
           <div className="relative rounded-3xl overflow-hidden shadow-lg aspect-[4/5] bg-cream-dark">
             <img
               src="/images/veli-bol-pride.webp"
-              alt="The Veli Bol wooden motosailer with her captain in Bol harbour, Brač"
+              alt={t.about.imageAlt}
               className="w-full h-full object-cover"
               loading="lazy"
               decoding="async"
             />
             <div className="absolute bottom-3 right-3 bg-white rounded-2xl p-3 shadow-lg">
-              <p className="font-sans text-[10px] text-gray-400 leading-none mb-0.5">🤍 Family-run</p>
-              <p className="font-sans font-semibold text-ink text-xs leading-none">EST. 1994</p>
+              <p className="font-sans text-[10px] text-gray-400 leading-none mb-0.5">{t.about.badgeTop}</p>
+              <p className="font-sans font-semibold text-ink text-xs leading-none">{t.about.badgeBottom}</p>
             </div>
           </div>
 
           {/* Text */}
           <div>
-            <p className="label mb-3">About us · Est. 1994</p>
+            <p className="label mb-3">{t.about.label}</p>
             <h2 className="font-serif font-bold text-ink leading-tight mb-6" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)' }}>
-              A small boat.<br />Big Adriatic days.
+              {t.about.heading[0]}<br />{t.about.heading[1]}
             </h2>
             <p className="font-sans text-gray-500 text-sm leading-relaxed mb-8">
-              Our wooden motosailer was handcrafted by my father, and we've been sailing her out of Bol since 2000.
-              Six tables on the main deck — one for each group — so you always have your own corner of the boat, in the shade.
-              The upper deck is open and sunny, with platforms to jump from and a slide if you feel like it — and if not,
-              there's snorkeling gear and paddleboards. Toilet aboard, food options available. We anchor where the water is
-              calm and the coves are quiet. No hidden fees, no extra costs — €65 for the ticket, €55 for the food package.
+              {t.about.body}
             </p>
 
             <div className="flex flex-col gap-3">

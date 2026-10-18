@@ -41,10 +41,8 @@ export const pricing = {
   priceValidUntil: '2027-12-31',
 }
 
+// The <title> and meta description are per language — `meta` in src/i18n/*.js.
 export const seo = {
-  title: 'Boat Tours from Bol, Croatia | Veli Bol Excursions',
-  description:
-    'Half-day boat tours from Bol on Brač — hidden Adriatic bays off Hvar, two swimming stops, snorkeling, paddleboards and a slow lunch aboard. €65 per adult.',
   ogImage: `${SITE_URL}/og-image.jpg`,
   heroImage: `${SITE_URL}/images/hero.webp`,
 }

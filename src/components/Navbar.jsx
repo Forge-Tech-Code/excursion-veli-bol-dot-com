@@ -1,16 +1,11 @@
 import { useState, useEffect } from 'react'
+import { useLang } from '../i18n'
 
-const navLinks = [
-  { label: 'Tour', href: '#essentials' },
-  { label: 'About', href: '#about' },
-  { label: 'Private', href: '#private' },
-  { label: 'Experience', href: '#experience' },
-  { label: 'Food', href: '#food' },
-  { label: 'Gallery', href: '#gallery' },
-  { label: 'Reviews', href: '#reviews' },
-]
+// Section ids in menu order; the labels are `nav.links` in each dictionary.
+const navLinks = ['essentials', 'about', 'private', 'experience', 'food', 'gallery', 'reviews']
 
 export default function Navbar() {
+  const { t } = useLang()
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -31,13 +26,13 @@ export default function Navbar() {
         </a>
 
         <nav className="hidden sm:flex items-center gap-6">
-          {navLinks.map(({ label, href }) => (
+          {navLinks.map((key) => (
             <a
-              key={href}
-              href={href}
+              key={key}
+              href={`#${key}`}
               className="font-sans text-xs tracking-widest uppercase text-ink/60 hover:text-ink transition-colors"
             >
-              {label}
+              {t.nav.links[key]}
             </a>
           ))}
         </nav>
@@ -80,9 +75,9 @@ export default function Navbar() {
           </a>
           <a
             href="#book"
-            className="btn-dark text-xs tracking-widest uppercase"
+            className="btn-dark px-4 sm:px-7 text-xs tracking-widest uppercase"
           >
-            Book
+            {t.nav.book}
           </a>
         </div>
       </div>

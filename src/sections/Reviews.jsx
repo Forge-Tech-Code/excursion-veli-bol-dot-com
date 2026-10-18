@@ -1,23 +1,27 @@
+import { useLang } from '../i18n'
+
 // Also the source for the Product review snippets — see src/seo/schema.js.
+// The quotes are the guests' own words, so they stay as written on every
+// language page; only the country is translated (`reviews.countries`).
 export const reviews = [
   {
     name: 'Sofia M.',
-    country: 'Italy',
+    country: 'italy',
     text: 'Pure magic. Crystal water, kind crew. We did nothing and it was everything.',
   },
   {
     name: 'Lukas R.',
-    country: 'Germany',
+    country: 'germany',
     text: 'Best half-day in Croatia. Small boat, hidden bays exactly like the photos.',
   },
   {
     name: 'Emma & Tom',
-    country: 'UK',
+    country: 'uk',
     text: "Milan made us feel like family. We'll be back next summer.",
   },
   {
     name: 'Camille D.',
-    country: 'France',
+    country: 'france',
     text: "The most relaxing day of our trip. They really mean 'no pressure'.",
   },
 ]
@@ -35,28 +39,30 @@ function Stars({ center = false }) {
 }
 
 export default function Reviews() {
+  const { t } = useLang()
+  const r = t.reviews
   return (
     <section id="reviews" className="bg-cream py-20 sm:py-28 border-t border-soft">
       <div className="max-w-5xl mx-auto px-5 sm:px-8">
         <div className="text-center mb-12">
-          <p className="label mb-4">Reviews · Boat tours from Bol</p>
-          <h2 className="section-heading mb-4">100% Recommend</h2>
+          <p className="label mb-4">{r.label}</p>
+          <h2 className="section-heading mb-4">{r.heading}</h2>
           <Stars center />
           <p className="font-sans text-sm text-gray-400 mt-3">
-            Based on 38 guest reviews ·{' '}
+            {r.basedOn} ·{' '}
             <a
               href="https://maps.app.goo.gl/SpNcdWgtLhwKhRzH7?g_st=ac"
               target="_blank"
               rel="noopener noreferrer"
               className="text-amber hover:text-ink underline underline-offset-2 transition-colors"
             >
-              View on Google
+              {r.viewOnGoogle}
             </a>
           </p>
         </div>
 
         <div className="max-w-3xl mx-auto mb-12 rounded-2xl border border-amber/30 bg-white shadow-md p-8 sm:p-10 text-center">
-          <p className="label mb-5">As featured in</p>
+          <p className="label mb-5">{r.featuredLabel}</p>
           <blockquote className="font-serif italic text-ink text-lg sm:text-xl leading-relaxed">
             “The other standout from this visit was a sailing trip we did with
             Milan, the owner of the excursion boat Veli, based in Bol. I will be
@@ -88,7 +94,7 @@ export default function Reviews() {
               <p className="font-sans text-sm text-gray-600 leading-relaxed mb-4">"{text}"</p>
               <div>
                 <p className="font-sans font-semibold text-ink text-sm">{name}</p>
-                <p className="font-sans text-xs text-gray-400">{country}</p>
+                <p className="font-sans text-xs text-gray-400">{r.countries[country]}</p>
               </div>
             </div>
           ))}
@@ -101,7 +107,7 @@ export default function Reviews() {
             rel="noopener noreferrer"
             className="btn-dark text-xs tracking-widest uppercase"
           >
-            Read all reviews on Google
+            {r.readAll}
           </a>
         </div>
       </div>

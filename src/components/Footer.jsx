@@ -1,4 +1,10 @@
+import { useLang } from '../i18n'
+
+// Section ids in menu order; the labels are `footer.links` in each dictionary.
+const footerLinks = ['essentials', 'about', 'experience', 'food', 'gallery', 'reviews', 'faq']
+
 export default function Footer() {
+  const { t } = useLang()
   return (
     <footer id="contact" className="bg-ink text-cream/60 font-sans">
       <div className="max-w-5xl mx-auto px-5 sm:px-8 py-14 grid sm:grid-cols-3 gap-10">
@@ -7,26 +13,22 @@ export default function Footer() {
             Veli Bol <em>Excursions</em>
           </div>
           <p className="text-xs leading-relaxed text-cream/50">
-            Family-run from Bol, Brač since 1994.<br />
-            A handful of guests, a different hidden bay every day.
+            {t.footer.blurb[0]}<br />
+            {t.footer.blurb[1]}
           </p>
         </div>
 
         <div>
-          <div className="label-light text-amber text-[10px] mb-3">Explore</div>
+          <div className="label-light text-amber text-[10px] mb-3">{t.footer.explore}</div>
           <nav className="flex flex-col gap-2 text-xs text-cream/60">
-            <a href="#essentials" className="hover:text-cream transition-colors">Tour Info</a>
-            <a href="#about" className="hover:text-cream transition-colors">About</a>
-            <a href="#experience" className="hover:text-cream transition-colors">Experience</a>
-            <a href="#food" className="hover:text-cream transition-colors">Food</a>
-            <a href="#gallery" className="hover:text-cream transition-colors">Gallery</a>
-            <a href="#reviews" className="hover:text-cream transition-colors">Reviews</a>
-            <a href="#faq" className="hover:text-cream transition-colors">FAQ</a>
+            {footerLinks.map((key) => (
+              <a key={key} href={`#${key}`} className="hover:text-cream transition-colors">{t.footer.links[key]}</a>
+            ))}
           </nav>
         </div>
 
         <div>
-          <div className="label-light text-amber text-[10px] mb-3">Get in touch</div>
+          <div className="label-light text-amber text-[10px] mb-3">{t.footer.contact}</div>
           <ul className="text-xs space-y-2 text-cream/60">
             <li>
               <a href="tel:+385957420929" className="hover:text-cream transition-colors">
@@ -64,7 +66,7 @@ export default function Footer() {
 
       <div className="border-t border-white/10 max-w-5xl mx-auto px-5 sm:px-8 py-5">
         <p className="text-[11px] text-cream/30">
-          © {new Date().getFullYear()} Veli Bol Excursions. Bol, Croatia.
+          © {new Date().getFullYear()} Veli Bol Excursions. {t.footer.place}
         </p>
       </div>
     </footer>
