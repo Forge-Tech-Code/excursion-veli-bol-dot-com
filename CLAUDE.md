@@ -62,6 +62,12 @@ public/
 
 Fonts: **Playfair Display** (serif — headings, logo, italic) · **Inter** (sans — body, labels, UI)
 
+Both are **self-hosted** from `public/fonts/` — variable woff2, latin + latin-ext only — with
+`@font-face` at the top of `src/index.css` and the two upright latin files preloaded in `index.html`.
+No request goes to Google Fonts. latin-ext carries the Croatian č ć š ž đ; German needs only latin. To
+refresh, take the same files from `@fontsource-variable/inter` / `playfair-display` and keep the
+`unicode-range` lines as they are.
+
 ## Reusable CSS classes (src/index.css)
 
 - `.label` — small amber spaced-caps section label
