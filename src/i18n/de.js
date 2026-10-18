@@ -6,7 +6,7 @@ export default {
   meta: {
     title: 'Bootstouren ab Bol, Kroatien | Veli Bol Excursions',
     description:
-      'Halbtägige Bootstouren ab Bol auf Brač — versteckte Buchten vor Hvar, zwei Badestopps, Schnorcheln, SUP-Boards und ein gemütliches Mittagessen an Bord. 65 € pro Erwachsenem.',
+      'Halbtägige Bootstouren ab Bol auf Brač — versteckte Buchten vor Hvar, zwei Badestopps, Schnorcheln, SUP-Boards und Mittagessen an Bord. 65 € pro Erwachsenem.',
     ogTitle: 'Bootstouren ab Bol, Kroatien — Veli Bol Excursions',
     ogDescription:
       'Eine ruhige halbtägige Bootstour ab Bol auf Brač zu den versteckten Buchten von Hvar. Badestopps, Schnorcheln, SUP-Boards, Mittagessen ohne Eile. Familienbetrieb seit 1994.',
