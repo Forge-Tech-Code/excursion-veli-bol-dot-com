@@ -40,11 +40,11 @@ There is no `404.html` here, so the general 404 check is skipped (`notFoundPage:
 
 ## Stack
 
-- **React 18** — UI
-- **Vite 5** — build tool, `base: '/'` in `vite.config.js`
+- **React 19** — UI
+- **Vite 8** — build tool, `base: '/'` in `vite.config.js`
 - **Tailwind CSS 3** — styling via utility classes + component layer in `src/index.css`
 - **vite-react-ssg** (routes entry) — prerenders one static page per language
-- **react-router-dom** — only as the build-time list of those pages (`src/routes.jsx`); nothing navigates through it. Every in-page link is an anchor (`#essentials`, `#about`, etc.)
+- **react-router-dom 6** — held on 6 because `vite-react-ssg` (0.9.2, the latest) only accepts `^6.14`; only as the build-time list of those pages (`src/routes.jsx`); nothing navigates through it. Every in-page link is an anchor (`#essentials`, `#about`, etc.)
 
 ## Project layout
 
@@ -180,8 +180,8 @@ Wording changes go in **all three** dictionaries; figures live in one place each
 ## Deployment
 
 - **GitHub Pages**: push to `main` triggers `.github/workflows/deploy.yml`
-  - Actions pinned to exact versions: `checkout@v6.0.3`, `setup-node@v6.4.0`, `upload-pages-artifact@v5.0.0`, `deploy-pages@v5.0.0`
-  - Node 26, `npm ci`, `npm run build`, artifact from `dist/`
+  - Actions pinned to exact versions: `checkout@v7.0.1`, `setup-node@v7.1.0`, `configure-pages@v6.0.0`, `upload-pages-artifact@v5.0.0`, `deploy-pages@v5.0.1`
+  - Node from `.nvmrc` (26 — the newest line; `engines` says the same), `npm ci`, `npm run build`, artifact from `dist/`
   - Enable at: Settings → Pages → Source → GitHub Actions
 - **Self-hosted**: see `Caddyfile` — drop `dist/` at `/var/www/veli-bol/`, Caddy handles HTTPS
 
